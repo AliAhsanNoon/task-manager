@@ -30,9 +30,11 @@ router.patch("/users/:id", async (req, res) => {
   const isValidOperations = updates.every((elem) =>
     allowedUpdates.includes(elem)
   );
+
   if (!isValidOperations) {
     return res.status(400).send({ error: "Invalid Update Operation" });
   }
+
   try {
     const user = await User.findById(req.params.id);
     updates.forEach((elem) => (user[elem] = req.body[elem]));
@@ -66,6 +68,18 @@ router.delete("/users/:id", async (req, res) => {
     res.status(200).send(user);
   } catch (error) {
     res.status(500).send();
+  }
+});
+
+router.post("/users/login", async (req, res) => {
+  try {
+    const user = await User.findByCredentials(
+      req.body.email,
+      req.body.password
+    );
+    res.send(user);
+  } catch (error) {
+    res.status(500).send(error);
   }
 });
 

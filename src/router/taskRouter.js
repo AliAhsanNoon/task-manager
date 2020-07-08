@@ -1,7 +1,6 @@
 const express = require("express");
 const router = new express.Router();
 const Task = require("../models/task");
-const { update } = require("../models/task");
 
 router.get("/tasks", async (req, res) => {
   try {
