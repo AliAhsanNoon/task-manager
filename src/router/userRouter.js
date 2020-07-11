@@ -1,14 +1,10 @@
 const express = require("express");
 const router = new express.Router();
 const User = require("../models/user");
+const auth = require("../middleware/auth");
 
-router.get("/users", async (req, res) => {
-  try {
-    const user = await User.find({});
-    res.status(200).send(user);
-  } catch (error) {
-    res.status(500).send(error);
-  }
+router.get("/users/me", auth, async (req, res) => {
+  res.status(200).send(req.user);
 });
 
 router.get("/users/:id", async (req, res) => {
@@ -53,8 +49,9 @@ router.post("/users", async (req, res) => {
     const user = new User(req.body);
 
     await user.save();
-    const token = user.generateAuthToken()
-    res.status(201).send(user);
+    const token = await user.generateAuthToken();
+    console.log("log user token trigger on POST :: ", token);
+    res.status(201).send({ user, token });
   } catch (error) {
     res.status(400).send(error);
   }

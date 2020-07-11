@@ -61,6 +61,7 @@ userSchema.methods.generateAuthToken = async function () {
     { _id: user._id.toString() },
     "JWT Autentication and Authorization"
   );
+
   user.tokens = user.tokens.concat({ token });
   await user.save();
   console.log("user auth token :: ", token);
